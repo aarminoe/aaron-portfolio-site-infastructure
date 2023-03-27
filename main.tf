@@ -26,3 +26,7 @@ resource "aws_s3_bucket" "b" {
 resource "aws_s3_bucket" "name" {
   bucket = "my-other-test-bucket"
 }
+
+resource "aws_s3_bucket" "test" {
+  bucket = "test-test"
+}
