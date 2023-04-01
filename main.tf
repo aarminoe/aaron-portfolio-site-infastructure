@@ -23,3 +23,36 @@ resource "aws_s3_bucket" "hosting" {
   }
 }
 
+resource "aws_s3_bucket_acl" "hosting_acl" {
+  bucket = aws_s3_bucket.hosting.id
+  acl = "public-read"
+  
+}
+
+resource "aws_s3_bucket_policy" "hosting_policy" {
+  bucket = aws_s3_bucket.hosting.id
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${var.site_bucket_name}/*"
+            ]
+        }
+    ]
+})
+}
+
+resource "aws_s3_bucket_website_configuration" "hosting_config" {
+  bucket = aws_s3_bucket.hosting.id
+
+  index_document {
+    suffix = "index.html"
+  }
+}
