@@ -11,11 +11,11 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
 }
 
-resource "aws_s3_bucket" "b" {
-  bucket = "my-tf-test-bucket-aaron-noe"
+resource "aws_s3_bucket" "hosting" {
+  bucket = var.site_bucket_name
 
   tags = {
     Name        = "My bucket"
@@ -23,10 +23,3 @@ resource "aws_s3_bucket" "b" {
   }
 }
 
-resource "aws_s3_bucket" "name" {
-  bucket = "my-other-test-bucket"
-}
-
-resource "aws_s3_bucket" "test" {
-  bucket = "test-test"
-}
