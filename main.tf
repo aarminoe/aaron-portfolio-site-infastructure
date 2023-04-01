@@ -14,6 +14,12 @@ provider "aws" {
   region = var.aws_region
 }
 
+module "template_files" {
+  source = "hashicorp/dir/template"
+
+  base_dir = "${path.module}/web"
+}
+
 resource "aws_s3_bucket" "hosting" {
   bucket = var.site_bucket_name
 
@@ -55,4 +61,16 @@ resource "aws_s3_bucket_website_configuration" "hosting_config" {
   index_document {
     suffix = "index.html"
   }
+}
+
+resource "aws_s3_bucket_object" "hosting_files" {
+  bucket = aws_s3_bucket.hosting.id
+  for_each = module.template_files.files
+  key = each.key
+  content_type = each.value.content_type
+
+  source = each.value.source_path
+  content = each.value.content
+
+  etag = each.value.digests.md5
 }
